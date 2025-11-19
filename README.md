@@ -14,14 +14,14 @@ SpringDoc OpenAPI (Swagger)
 H2 Database
 JUnit / Mockito
 
-📦 Como Rodar o Projeto Localmente
-🔧 1. Clonar o repositório
-git clone <url-do-repositorio>
-cd backend
 
 ☁️ Link do Projeto no Render 
 https://avaliacao-02.onrender.com/swagger-ui/index.html
 
+📦 Como Rodar o Projeto Localmente
+🔧 1. Clonar o repositório
+git clone <url-do-repositorio>
+cd backend
 
 ▶️ 2. Executar o projeto
 

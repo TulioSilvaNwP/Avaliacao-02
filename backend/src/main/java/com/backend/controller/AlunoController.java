@@ -11,13 +11,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/alunos")
 public class AlunoController {
+
     private final AlunoService service;
 
-    public AlunoController(AlunoService service){ this.service = service; }
+    public AlunoController(AlunoService service){
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<List<AlunoDTO>> listar(){
         return ResponseEntity.ok(service.listarTodos());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AlunoDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @PostMapping
@@ -27,6 +35,18 @@ public class AlunoController {
         AlunoDTO criado = service.criar(dto);
         URI uri = URI.create("/api/alunos/" + criado.getId());
         return ResponseEntity.created(uri).body(criado);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AlunoDTO> atualizar(@PathVariable Long id, @RequestBody AlunoDTO dto) {
+        dto.setId(id);
+        return ResponseEntity.ok(service.atualizar(dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{alunoId}/cursos/{cursoId}")

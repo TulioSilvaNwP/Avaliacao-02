@@ -14,19 +14,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class AlunoService {
+
     private final AlunoRepository alunoRepo;
     private final CursoRepository cursoRepo;
 
-    public AlunoService(AlunoRepository alunoRepo, CursoRepository cursoRepo){
+    public AlunoService(AlunoRepository alunoRepo, CursoRepository cursoRepo) {
         this.alunoRepo = alunoRepo;
         this.cursoRepo = cursoRepo;
     }
 
-    public List<AlunoDTO> listarTodos(){
-        return alunoRepo.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+    public List<AlunoDTO> listarTodos() {
+        return alunoRepo.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public AlunoDTO criar(AlunoDTO dto){
+    public AlunoDTO criar(AlunoDTO dto) {
         Aluno a = new Aluno();
         a.setNome(dto.getNome());
         a.setEmail(dto.getEmail());
@@ -36,26 +40,47 @@ public class AlunoService {
     }
 
     @Transactional
-    public AlunoDTO vincularCurso(Long alunoId, Long cursoId){
+    public AlunoDTO atualizar(AlunoDTO dto) {
+        Aluno aluno = alunoRepo.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+        aluno.setNome(dto.getNome());
+        aluno.setEmail(dto.getEmail());
+        aluno.setMatricula(dto.getMatricula());
+
+        return toDTO(aluno);
+    }
+
+    public void deletar(Long id) {
+        if (!alunoRepo.existsById(id)) {
+            throw new RuntimeException("Aluno não encontrado");
+        }
+        alunoRepo.deleteById(id);
+    }
+
+    @Transactional
+    public AlunoDTO vincularCurso(Long alunoId, Long cursoId) {
         Aluno aluno = alunoRepo.findById(alunoId).orElseThrow();
         Curso curso = cursoRepo.findById(cursoId).orElseThrow();
         aluno.getCursos().add(curso);
         return toDTO(aluno);
     }
 
-    private AlunoDTO toDTO(Aluno a){
+    public AlunoDTO buscarPorId(Long id) {
+        Aluno aluno = alunoRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+        return toDTO(aluno);
+    }
+
+    private AlunoDTO toDTO(Aluno a) {
         AlunoDTO dto = new AlunoDTO();
         dto.setId(a.getId());
         dto.setNome(a.getNome());
         dto.setEmail(a.getEmail());
         dto.setMatricula(a.getMatricula());
-        dto.setCursoIds(a.getCursos().stream().map(Curso::getId).collect(Collectors.toSet()));
+        dto.setCursoIds(a.getCursos().stream()
+                .map(Curso::getId)
+                .collect(Collectors.toSet()));
         return dto;
-    }
-
-    public AlunoDTO buscarPorId(Long id) {
-        Aluno aluno = alunoRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
-        return toDTO(aluno);
     }
 }

@@ -19,6 +19,10 @@ JUnit / Mockito
 git clone <url-do-repositorio>
 cd backend
 
+☁️ Link do Projeto no Render 
+https://avaliacao-02.onrender.com/swagger-ui/index.html
+
+
 ▶️ 2. Executar o projeto
 
 Usando Maven:
@@ -108,9 +112,6 @@ mvn gatling:test
 O relatório será gerado automaticamente em:
 /target/gatling
 
-
-☁️ Link do Projeto no Render 
-https://avaliacao-02.onrender.com/swagger-ui/index.html
 
 📖 Referências
 
